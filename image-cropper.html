@@ -1,0 +1,361 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>tarent Image cropper</title>
+        <link rel="icon" href="https://www.tarent.de/wp-content/uploads/cropped-tarent-2_thumb-192x192.png" sizes="192x192" />
+
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap" rel="stylesheet">
+
+        <script src="script/dom-to-image.js" type="text/javascript"></script>
+        <script src="script/FileSaver.min.js" type="text/javascript"></script>
+
+        <style type="text/css">
+            body {
+                background-color: black;
+                color: white;
+                font-family: 'Ubuntu', sans-serif;
+                font-size: x-large;
+            }
+
+            p {
+                text-align: center;
+            }
+            div.droparea
+            {
+                width: 100%;
+                height: 100%;
+            }
+            div.aspectcorrect
+            {
+                overflow: hidden;
+                position: relative;
+                background-repeat: no-repeat;
+                background-position: 50% 50%;
+                background-size: cover;
+                background-color: white;
+                text-align: center;
+                vertical-align: middle;
+                color: dimgrey;
+                font-size: xxx-large;
+
+            }
+
+            div.article
+            {
+                width: 1012px;
+                height: 441px;   
+                line-height: 441px;   
+                background-image: url('img/article_background.png');
+            }
+
+            div.facebook
+            {
+                width: 1200px;
+                height: 628px;
+                line-height: 628px; 
+                background-image: url('img/facebook_background.png');
+            }
+
+            div.mobile
+            {
+                width: 343px;
+                height: 235px;
+                line-height: 235px;  
+                background-image: url('img/mobile_background.png');
+            }
+
+            div.teaser
+            {
+                width: 272px;
+                height: 313px;
+                line-height: 313px;   
+                background-image: url('img/teaser_background.png');
+            }
+
+            div.twitter
+            {
+                width: 1024px;
+                height: 512px;
+                line-height: 512px;   
+                background-image: url('img/twitter_background.png');
+            }
+
+            .vertSlider{
+                -webkit-appearance: slider-vertical;
+                width: 50px; 
+            }
+
+
+            .float{
+                position:fixed;
+                width:60px;
+                height:60px;
+                bottom:40px;
+                right:40px;
+                background-color:#0C9;
+                color:#FFF;
+                border-radius:50px;
+                text-align:center;
+                box-shadow: 2px 2px 3px #999;
+                z-index: 10;
+            }
+
+            .my-float{
+                margin-top:22px;
+            }
+
+        </style>
+
+    </head>
+
+
+    <body>
+        <div class="droparea" id="droparea">
+            <center>
+                <a onclick="downloadClick()" href="#" class="float">
+                    <i class="fa fa-arrow-down my-float"></i>
+                </a>
+                <p>Datei auswählen oder per drag and drop irgendwo in dieses Fenster ziehen</p>
+                <p><input type="file" id="file-selector"  accept=".jpg, .jpeg, .png" onchange="onFileSelected(event)"></p>
+                <!-- The `multiple` attribute lets users select multiple files. -->
+
+                <br />
+                <br />
+
+                <table>
+                    <tr>
+                        <th>
+                            <div>
+                                <table>
+                                    <tr>
+                                        <th>    <div class="aspectcorrect teaser" id="teaserWrapper" >
+                                            <!--                        Teaser Image-->
+                                            </div></th>
+                                        <th><input id="sliderTeaserV" class="vertSlider" type="range" value="50" min="0" max="100" style="height: 313px;"></th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <input id="sliderTeaserH"  type="range" value="50" min="0" max="100" class="slider" style="width: 272px;"><br/>
+                                        </th>
+                                    </tr>
+                                </table>
+                                <br/>
+
+
+                            </div>
+                        </th>
+                        <th>
+                            <div>
+                                <table>
+                                    <tr>
+                                        <th>
+                                            <div class="aspectcorrect mobile" id="mobileWrapper" >
+                                                <!--                            Mobile Header                            -->
+                                            </div></th>
+                                        <th><input id="sliderMobileV" class="vertSlider" type="range"value="50" min="0" max="100" style="height: 235px;"></th>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <input id="sliderMobileH"  type="range" value="50" min="0" max="100" class="slider" style="width: 343px;"><br/>
+
+                                        </th>
+                                    </tr>
+                                </table>
+                                <br/>
+                            </div>
+                        </th>
+                    </tr>
+                </table>
+                <br />
+
+                <div>
+                    <table>
+                        <tr>
+                            <th><div class="aspectcorrect article" id="articleWrapper">
+                                <!--                        Article Header-->
+                                </div>
+                                <br/>
+                                <input id="sliderArticleH"  type="range" min="0" max="100" value="50" class="slider" style="width: 1012px;">
+                            </th>
+                            <th><input id="sliderArticleV" class="vertSlider" type="range" value="50" min="0" max="100" style="height: 441px;"></th>
+                        </tr>
+                    </table>
+                    <br/>
+
+                    <br/>
+                </div>
+
+                <div>
+                    <table>
+                        <tr>
+                            <th><div class="aspectcorrect facebook" id="facebookWrapper" >
+                                <!--                        Facebook Preview-->
+                                </div>
+                                <br/>
+                                <input id="sliderFacebookH"  type="range" value="50" min="0" max="100" class="slider" style="width: 1200px;"></th>
+                            <th><input id="sliderFacebookV" class="vertSlider" type="range" value="50" min="0" max="100" style="height: 628px;"></th>
+                        </tr>
+                    </table>
+                    <br/>
+                    <br/>
+                </div>
+
+                <div>
+                    <table>
+                        <tr>
+                            <th><div class="aspectcorrect twitter" id="twitterWrapper" >
+                                <!--                        Facebook Preview-->
+                                </div>
+                                <br/>
+                                <input id="sliderTwitterH"  type="range" value="50" min="0" max="100" class="slider" style="width: 1024px;">
+                            </th>
+                            <th><input id="sliderTwitterV" class="vertSlider" type="range" value="50" min="0" max="100" style="height: 512px;"></th>
+                        </tr>
+                    </table>
+                    <br/>
+                    <br/>
+                </div>
+
+                <br/>
+            </center>
+        </div>
+        <script>
+            var filename = "image";
+            var articleTag = document.getElementById("articleWrapper");
+            var facebookTag = document.getElementById("facebookWrapper");
+            var mobileTag = document.getElementById("mobileWrapper");
+            var teaserTag = document.getElementById("teaserWrapper");
+            var twitterTag = document.getElementById("twitterWrapper");
+
+            var articleSliderV = document.getElementById("sliderArticleV");
+            var articleSliderH= document.getElementById("sliderArticleH");
+            var facebookSliderV = document.getElementById("sliderFacebookV");
+            var facebookSliderH= document.getElementById("sliderFacebookH");
+            var mobileSliderV = document.getElementById("sliderMobileV");
+            var mobileSliderH= document.getElementById("sliderMobileH");
+            var teaserSliderV = document.getElementById("sliderTeaserV");
+            var teaserSliderH= document.getElementById("sliderTeaserH");
+            var twitterSliderV = document.getElementById("sliderTwitterV");
+            var twitterSliderH= document.getElementById("sliderTwitterH");
+
+            // --------------- drop Area -------------
+
+            const dropArea = document.getElementById('droparea');
+
+            dropArea.addEventListener('dragover', (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                // Style the drag-and-drop as a "copy file" operation.
+                event.dataTransfer.dropEffect = 'copy';
+            });
+
+            dropArea.addEventListener('drop', (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                const fileList = event.dataTransfer.files;
+                setImage(event.dataTransfer.files[0])
+                console.log(fileList);
+            });
+
+            // ----- file selector
+
+            const fileSelector = document.getElementById('file-selector');
+            fileSelector.addEventListener('change', (event) => {
+                const fileList = event.target.files;
+                console.log(fileList);
+                readImage(fileList);
+            });
+
+            function onFileSelected(event) {
+                var selectedFile = event.target.files[0];
+                setImage(selectedFile);
+            }
+
+            function setImage(selectedFile){
+                var reader = new FileReader();
+
+                filename = selectedFile.name;
+                filename = filename.substr(0, filename.lastIndexOf("."))
+
+                reader.onload = function(event) {
+                    articleTag.style.backgroundImage = `url(${ event.target.result })`;
+                    facebookTag.style.backgroundImage = `url(${ event.target.result })`;
+                    mobileTag.style.backgroundImage = `url(${ event.target.result })`;
+                    teaserTag.style.backgroundImage = `url(${ event.target.result })`;
+                    twitterTag.style.backgroundImage = `url(${ event.target.result })`;
+                };
+
+                reader.readAsDataURL(selectedFile);
+            }
+
+
+            // Update the image position according to slider position
+            articleSliderV.oninput = function() {
+                articleTag.style.backgroundPositionY = this.value +'%';
+            }
+
+            articleSliderH.oninput = function() {
+                articleTag.style.backgroundPositionX = this.value + '%';
+            }
+
+            facebookSliderV.oninput = function() {
+                facebookTag.style.backgroundPositionY = this.value +'%';
+            }
+
+            facebookSliderH.oninput = function() {
+                facebookTag.style.backgroundPositionX = this.value +'%';
+            }
+
+            mobileSliderV.oninput = function() {
+                mobileTag.style.backgroundPositionY = this.value +'%';
+            }
+
+            mobileSliderH.oninput = function() {
+                mobileTag.style.backgroundPositionX = this.value +'%';
+            }
+
+            teaserSliderV.oninput = function() {
+                teaserTag.style.backgroundPositionY = this.value +'%';
+            }
+
+            teaserSliderH.oninput = function() {
+                teaserTag.style.backgroundPositionX = this.value +'%';
+            }
+
+            twitterSliderV.oninput = function() {
+                twitterTag.style.backgroundPositionY = this.value +'%';
+            }
+
+            twitterSliderH.oninput = function() {
+                twitterTag.style.backgroundPositionX = this.value +'%';
+            }
+
+            function downloadClick(){
+                downloadImages(articleTag, 'article');
+                downloadImages(facebookTag, 'facebook');
+                downloadImages(mobileTag, 'mobile');
+                downloadImages(teaserTag, 'teaser');
+                downloadImages(twitterTag, 'twitter');
+            }
+
+            function downloadImages(tagName, targetName){
+                domtoimage.toJpeg(tagName, { quality: 0.95 })
+                    .then(function (dataUrl) {
+                    var link = document.createElement('a');
+                    link.download = filename + '_' + targetName + '.jpeg';
+                    link.href = dataUrl;
+                    link.click();
+                });
+            }
+
+        </script>
+
+
+    </body>
+
+
+</html>
